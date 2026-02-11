@@ -1,6 +1,6 @@
 """Button entities for JXHome integration."""
 from homeassistant.components.button import ButtonEntity, ButtonDeviceClass
-from homeassistant.core import HomeAssistant, callback
+from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.exceptions import HomeAssistantError
@@ -13,44 +13,6 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up button entities."""
-    async_add_entities([
-        JXHomeParamConfigButton(hass, entry),
-    ])
-
-
-class JXHomeParamConfigButton(ButtonEntity):
-    """按钮实体 - 点击打开参数配置弹窗"""
-
-    _attr_device_class = ButtonDeviceClass.RESTART
-    _attr_icon = "mdi:cog"
-    _attr_should_poll = False
-
-    def __init__(self, hass: HomeAssistant, entry: ConfigEntry):
-        self.hass = hass
-        self._entry = entry
-        self._attr_unique_id = f"{entry.entry_id}_param_config_button"
-        self._attr_name = "参数配置"
-
-    @property
-    def device_info(self):
-        return {
-            "identifiers": {(DOMAIN, self._entry.entry_id)},
-            "name": self._entry.data.get("name", "杰效主控板"),
-            "manufacturer": "杰效科技",
-        }
-
-    async def async_press(self) -> None:
-        """点击按钮时打开参数配置流程"""
-        try:
-            # 这会在设备页面显示一个参数配置对话框/弹窗
-            await self.hass.config_entries.flow.async_init(
-                DOMAIN,
-                context={
-                    "source": "options",
-                    "entry_id": self._entry.entry_id,
-                },
-                data=None,
-            )
-        except Exception as err:
-            raise HomeAssistantError(f"无法打开参数配置: {err}") from err
+    # 按钮已移除 - 参数配置通过设备的选项流访问（设备页面的设置菜单）
+    # 用户可以在设备页面右上角的菜单中点击"设置"来打开参数配置
 

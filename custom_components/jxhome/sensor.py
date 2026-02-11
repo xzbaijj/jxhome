@@ -8,6 +8,7 @@ from .const import DOMAIN, SENSOR_TYPE_VOLTAGE, SENSOR_TYPE_CURRENT
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities: "AddEntitiesCallback") -> None:
     """设置传感器实体"""
     sensors = [
+        JXHomeDeviceInfoSensor(entry, hass),
         JXHomeSensor(entry),
         JXHomeVoltageSensor(entry),
         JXHomeCurrentSensor(entry),
@@ -16,7 +17,64 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
     ]
     async_add_entities(sensors, True)
 
-class JXHomeSensor(SensorEntity):
+class JXHomeDeviceInfoSensor(SensorEntity):
+    """杰效设备信息传感器 - 显示设备的详细信息，类似Tasmota设备面板"""
+    
+    _attr_icon = "mdi:information"
+    
+    def __init__(self, entry: ConfigEntry, hass: HomeAssistant):
+        self._attr_name = f"{entry.data.get('name')} 设备信息"
+        self._attr_unique_id = f"{entry.entry_id}_device_info"
+        self._entry_id = entry.entry_id
+        self._config_entry = entry
+        self.hass = hass
+        self._attr_should_poll = False
+        
+        # 监听配置条目选项更新（当参数修改时更新设备信息）
+        self._unsub_options = entry.add_update_listener(self._async_options_updated)
+
+    async def _async_options_updated(self, hass: HomeAssistant, entry: ConfigEntry):
+        """配置选项更新时的回调"""
+        self.async_write_ha_state()
+
+    @property
+    def state(self):
+        """返回设备信息的格式化字符串"""
+        device_id = self._entry_id[:8]
+        current_ratio = self._config_entry.options.get("current_ratio", 1.0)
+        voltage_ratio = self._config_entry.options.get("voltage_ratio", 1.0)
+        
+        return f"固件: v1.0.0 | MAC: {device_id}"
+
+    @property
+    def extra_state_attributes(self):
+        """返回设备的详细属性信息 - 这些将在Home Assistant UI的属性部分显示"""
+        device_id = self._entry_id[:8]
+        current_ratio = self._config_entry.options.get("current_ratio", 1.0)
+        voltage_ratio = self._config_entry.options.get("voltage_ratio", 1.0)
+        
+        return {
+            "固件版本": "v1.0.0",
+            "MAC地址": device_id,
+            "设备名称": self._config_entry.data.get("name", "杰效主控板"),
+            "电压互感器变比": voltage_ratio,
+            "电流互感器变比": current_ratio,
+            "制造商": "杰效科技",
+            "设备类型": "主控板",
+        }
+
+    @property
+    def device_info(self):
+        return {
+            "identifiers": {(DOMAIN, self._entry_id)},
+            "name": self._config_entry.data.get("name", "杰效主控板"),
+            "manufacturer": "杰效科技",
+        }
+
+    async def async_will_remove_from_hass(self) -> None:
+        """移除实体时清理"""
+        self._unsub_options()
+
     """杰效状态传感器"""
     
     def __init__(self, entry):
