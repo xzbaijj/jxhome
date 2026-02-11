@@ -32,24 +32,47 @@ class JXHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return True
 
     async def async_step_options(self, user_input=None):
-        """打开选项流 - 用于从按钮打开参数配置"""
-        # 获取对应的配置条目
+        """处理选项流 - 当从按钮打开参数配置时"""
         entry_id = self.context.get("entry_id")
         if not entry_id:
-            # 如果没有entry_id，从第一个config entry获取
-            entries = self.hass.config_entries.async_entries(DOMAIN)
-            if entries:
-                entry = entries[0]
-            else:
-                return self.async_abort(reason="not_found")
-        else:
-            entry = self.hass.config_entries.async_get_entry(entry_id)
-            if not entry:
-                return self.async_abort(reason="not_found")
+            return self.async_abort(reason="not_found")
         
-        # 显示options流
-        options_handler = JXHomeOptionsFlowHandler(entry)
-        return await options_handler.async_step_init(user_input)
+        entry = self.hass.config_entries.async_get_entry(entry_id)
+        if not entry:
+            return self.async_abort(reason="not_found")
+        
+        if user_input is not None:
+            # 保存参数到配置条目选项
+            config_data = {
+                "current_ratio": user_input.get("current_ratio", 1.0),
+                "voltage_ratio": user_input.get("voltage_ratio", 1.0),
+            }
+            
+            # 更新配置条目的选项
+            self.hass.config_entries.async_update_entry(
+                entry,
+                options=config_data
+            )
+            
+            # 返回完成
+            return self.async_abort_entry_setup_complete()
+        
+        # 获取当前的配置值
+        current_current_ratio = entry.options.get("current_ratio", 1.0)
+        current_voltage_ratio = entry.options.get("voltage_ratio", 1.0)
+        
+        # 显示参数编辑表单
+        return self.async_show_form(
+            step_id="options",
+            data_schema=vol.Schema({
+                vol.Required("voltage_ratio", default=current_voltage_ratio): float,
+                vol.Required("current_ratio", default=current_current_ratio): float,
+            }),
+            description_placeholders={
+                "voltage_help": "电压互感器变比（用于校准电压测量值），默认为 1.0",
+                "current_help": "电流互感器变比（用于校准电流测量值），默认为 1.0",
+            }
+        )
 
 
 

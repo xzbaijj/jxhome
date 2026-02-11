@@ -1,7 +1,7 @@
 """Button entities for JXHome integration."""
 from homeassistant.components.button import ButtonEntity, ButtonDeviceClass
 from homeassistant.core import HomeAssistant
-from homeassistant.config_entries import ConfigEntry
+from homeassistant.config_entries import ConfigEntry, SOURCE_OPTIONS
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.exceptions import HomeAssistantError
 from .const import DOMAIN
@@ -46,7 +46,7 @@ class JXHomeParamConfigButton(ButtonEntity):
             await self.hass.config_entries.flow.async_init(
                 DOMAIN,
                 context={
-                    "source": "options",
+                    "source": SOURCE_OPTIONS,
                     "entry_id": self._entry.entry_id,
                 },
                 data=None,
