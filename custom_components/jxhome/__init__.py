@@ -28,7 +28,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         manufacturer="杰效科技",
         model="JXHome Control Board",
         hw_version=f"硬件: MAC: {device_id}",
-        sw_version=f"固件: v1.0.0 | 电流变比: {current_ratio} | 电压变比: {voltage_ratio}",
+        sw_version=f"v1.0.0 | 电流变比: {current_ratio} | 电压变比: {voltage_ratio}",
     )
     
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)

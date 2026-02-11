@@ -31,6 +31,27 @@ class JXHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         """支持设备级别配置"""
         return True
 
+    async def async_step_options(self, user_input=None):
+        """打开选项流 - 用于从按钮打开参数配置"""
+        # 获取对应的配置条目
+        entry_id = self.context.get("entry_id")
+        if not entry_id:
+            # 如果没有entry_id，从第一个config entry获取
+            entries = self.hass.config_entries.async_entries(DOMAIN)
+            if entries:
+                entry = entries[0]
+            else:
+                return self.async_abort(reason="not_found")
+        else:
+            entry = self.hass.config_entries.async_get_entry(entry_id)
+            if not entry:
+                return self.async_abort(reason="not_found")
+        
+        # 显示options流
+        options_handler = JXHomeOptionsFlowHandler(entry)
+        return await options_handler.async_step_init(user_input)
+
+
 
 class JXHomeOptionsFlowHandler(config_entries.OptionsFlow):
     """处理集成选项流的逻辑 - 在集成配置中显示参数配置选项"""
