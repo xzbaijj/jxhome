@@ -37,6 +37,7 @@ class JXHomeOptionsFlowHandler(config_entries.OptionsFlow):
 
     def __init__(self, config_entry):
         self.config_entry = config_entry
+        self.hass = None
         self.read_data = {}
 
     async def async_step_init(self, user_input=None):
@@ -101,8 +102,8 @@ class JXHomeOptionsFlowHandler(config_entries.OptionsFlow):
             # 发送参数到设备（通过 MQTT）
             await self._save_to_device(config_data)
             
-            # 保存到 Home Assistant 选项
-            return self.async_create_entry(title="", data=config_data)
+            # 更新选项时使用 self.async_abort_entry_setup_complete()
+            return self.async_abort_entry_setup_complete()
         
         # 获取当前的配置值，作为默认值
         current_current_ratio = self.config_entry.options.get("current_ratio", 1.0)

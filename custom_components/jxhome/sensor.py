@@ -5,7 +5,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from .const import DOMAIN, SENSOR_TYPE_VOLTAGE, SENSOR_TYPE_CURRENT
 
-async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback) -> None:
+async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities: "AddEntitiesCallback") -> None:
     """设置传感器实体"""
     sensors = [
         JXHomeSensor(entry),
