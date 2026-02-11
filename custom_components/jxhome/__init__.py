@@ -1,5 +1,6 @@
 from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.helpers import device_registry as dr
 from .const import DOMAIN, PLATFORMS
 from .services import async_setup_services, async_unload_services
 
@@ -14,6 +15,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     if not hass.data[DOMAIN].get("services_registered"):
         await async_setup_services(hass)
         hass.data[DOMAIN]["services_registered"] = True
+    
+    # 注册设备
+    device_registry = dr.async_get(hass)
+    device_registry.async_get_or_create(
+        config_entry_id=entry.entry_id,
+        identifiers={(DOMAIN, entry.entry_id)},
+        name=entry.data.get("name", "杰效主控板"),
+        manufacturer="杰效科技",
+    )
     
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True

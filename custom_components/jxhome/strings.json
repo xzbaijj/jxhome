@@ -11,13 +11,30 @@
     "step": {
       "init": {
         "title": "杰效设备参数配置",
-        "description": "您可以在此调整设备的运行参数",
+        "description": "请选择要执行的操作",
         "data": {
-          "temp_offset": "温度校准偏移量 (°C)",
-          "scan_interval": "数据刷新频率 (秒)"
+          "action": "操作"
+        }
+      },
+      "read_params": {
+        "title": "读取参数",
+        "description": "以下是从设备读取的参数值（只读）",
+        "data": {
+          "current_ratio": "电流变比系数",
+          "voltage_ratio": "电压变比系数"
+        }
+      },
+      "save_params": {
+        "title": "保存参数",
+        "description": "请输入新的参数值",
+        "data": {
+          "current_ratio": "电流变比系数（用于校准电流测量值）",
+          "voltage_ratio": "电压变比系数（用于校准电压测量值）"
         }
       }
     }
+  }
+}
   },
   "title": "杰效"
 }
