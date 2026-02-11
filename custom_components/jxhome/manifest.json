@@ -6,6 +6,5 @@
   "documentation": "https://github.com/xzbaijj/jxhome",
   "issue_tracker": "https://github.com/xzbaijj/jxhome/issues",
   "codeowners": ["@xzbaijj"],
-  "iot_class": "local_polling",
-  "version": "1.0.0"
+  "iot_class": "local_polling"
 }

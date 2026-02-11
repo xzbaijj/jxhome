@@ -30,7 +30,6 @@ class JXHomeSensor(SensorEntity):
             "identifiers": {(DOMAIN, self._entry_id)},
             "name": self._config_entry.data.get("name", "杰效主控板"),
             "manufacturer": "杰效科技",
-            "configuration_url": f"/config/devices/device/{self._entry_id}",
         }
 
 class JXHomeVoltageSensor(SensorEntity):
@@ -56,7 +55,6 @@ class JXHomeVoltageSensor(SensorEntity):
             "identifiers": {(DOMAIN, self._entry_id)},
             "name": self._config_entry.data.get("name", "杰效主控板"),
             "manufacturer": "杰效科技",
-            "configuration_url": f"/config/devices/device/{self._entry_id}",
         }
 
 class JXHomeCurrentSensor(SensorEntity):
@@ -82,5 +80,4 @@ class JXHomeCurrentSensor(SensorEntity):
             "identifiers": {(DOMAIN, self._entry_id)},
             "name": self._config_entry.data.get("name", "杰效主控板"),
             "manufacturer": "杰效科技",
-            "configuration_url": f"/config/devices/device/{self._entry_id}",
         }
