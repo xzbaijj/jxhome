@@ -1,7 +1,22 @@
-@property
-    def native_value(self):
-        """返回当前的温度数值（应用校准偏移）"""
-        # 从 options 中获取用户配置的偏移量，默认为 0
-        offset = self._entry.options.get("temp_offset", 0.0)
-        base_temp = 25.5 # 假设的原始数据
-        return base_temp + offset
+from homeassistant.components.sensor import SensorEntity
+from .const import DOMAIN
+
+async def async_setup_entry(hass, entry, async_add_entities):
+    async_add_entities([JXHomeSensor(entry)], True)
+
+class JXHomeSensor(SensorEntity):
+    def __init__(self, entry):
+        self._attr_name = f"{entry.data.get('name')} 状态"
+        self._attr_unique_id = f"{entry.entry_id}_status"
+
+    @property
+    def state(self):
+        return "在线"
+
+    @property
+    def device_info(self):
+        return {
+            "identifiers": {(DOMAIN, "jxhome_fixed_id")},
+            "name": "杰效主控板",
+            "manufacturer": "杰效科技",
+        }
