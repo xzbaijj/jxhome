@@ -1,6 +1,6 @@
 """杰效集成的常量"""
 DOMAIN = "jxhome"
-PLATFORMS = ["sensor"]
+PLATFORMS = ["sensor", "button"]
 
 # 传感器类型
 SENSOR_TYPE_VOLTAGE = "voltage"

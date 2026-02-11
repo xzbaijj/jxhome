@@ -33,5 +33,12 @@
         }
       }
     }
+  },
+  "entity": {
+    "button": {
+      "jxhome_param_config_button": {
+        "name": "参数配置"
+      }
+    }
   }
 }
