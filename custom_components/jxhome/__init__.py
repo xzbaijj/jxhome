@@ -19,7 +19,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     current_ratio = entry.options.get("current_ratio", 1.0)
     voltage_ratio = entry.options.get("voltage_ratio", 1.0)
     
-    # 注册设备 - 并添加完整的设备信息
+    # 注册设备 - 在hw_version中显示所有信息
     device_registry = dr.async_get(hass)
     device = device_registry.async_get_or_create(
         config_entry_id=entry.entry_id,
@@ -27,8 +27,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         name=device_name,
         manufacturer="杰效科技",
         model="JXHome Control Board",
-        hw_version=f"MAC: {device_id}",  # 硬件版本显示MAC地址
-        sw_version=f"v1.0.0",  # 软件版本
+        hw_version=f"硬件: MAC: {device_id}",
+        sw_version=f"固件: v1.0.0 | 电流变比: {current_ratio} | 电压变比: {voltage_ratio}",
     )
     
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
@@ -44,10 +44,6 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         del hass.data[DOMAIN][entry.entry_id]
     
     return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
-
-async def update_listener(hass: HomeAssistant, entry: ConfigEntry):
-    """当选项流更新时，重新加载集成以应用新参数"""
-    await hass.config_entries.async_reload(entry.entry_id)
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """卸载集成条目"""
