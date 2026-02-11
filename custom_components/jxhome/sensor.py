@@ -44,7 +44,7 @@ class JXHomeDeviceInfoSensor(SensorEntity):
         current_ratio = self._config_entry.options.get("current_ratio", 1.0)
         voltage_ratio = self._config_entry.options.get("voltage_ratio", 1.0)
         
-        return f"固件: v1.0.0 | MAC: {device_id}"
+        return f"固件: v1.0.0 | MAC: {device_id} | 电压变比: {voltage_ratio} | 电流变比: {current_ratio}"
 
     @property
     def extra_state_attributes(self):
