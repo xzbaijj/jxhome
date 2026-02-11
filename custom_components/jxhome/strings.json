@@ -1,0 +1,14 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "配置 杰效 (JxHome)",
+        "description": "请输入设备名称以完成添加",
+        "data": {
+          "name": "设备名称"
+        }
+      }
+    }
+  },
+  "title": "杰效"
+}
