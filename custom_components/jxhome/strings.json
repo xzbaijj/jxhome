@@ -33,32 +33,5 @@
         }
       }
     }
-  },
-  "device_config": {
-    "step": {
-      "init": {
-        "title": "杰效参数配置",
-        "description": "请选择要执行的操作",
-        "data": {
-          "action": "操作"
-        }
-      },
-      "read_device_params": {
-        "title": "读取参数",
-        "description": "以下是从设备读取的参数值（只读）",
-        "data": {
-          "current_ratio": "电流变比系数",
-          "voltage_ratio": "电压变比系数"
-        }
-      },
-      "save_device_params": {
-        "title": "保存参数",
-        "description": "请输入新的参数值",
-        "data": {
-          "current_ratio": "电流变比系数（用于校准电流测量值）",
-          "voltage_ratio": "电压变比系数（用于校准电压测量值）"
-        }
-      }
-    }
   }
 }
