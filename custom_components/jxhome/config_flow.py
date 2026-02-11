@@ -37,7 +37,7 @@ class JXHomeOptionsFlowHandler(config_entries.OptionsFlow):
         if user_input is not None:
             action = user_input.get("action")
             if action == "read":
-                return await self.async_step_read_params()
+                return await self.async_step_read_params_init()
             elif action == "save":
                 return await self.async_step_save_params()
         
@@ -46,13 +46,16 @@ class JXHomeOptionsFlowHandler(config_entries.OptionsFlow):
             step_id="init",
             data_schema=vol.Schema({
                 vol.Required("action"): vol.In({
-                    "read": "📖 读取参数",
-                    "save": "💾 保存参数"
+                    "read": "读取参数",
+                    "save": "保存参数"
                 })
-            })
+            }),
+            description_placeholders={
+                "description": "请选择要执行的操作"
+            }
         )
 
-    async def async_step_read_params(self, user_input=None):
+    async def async_step_read_params_init(self, user_input=None):
         """读取参数步骤 - 从设备读取当前参数值"""
         if user_input is None:
             # 从设备读取参数（通过 MQTT）
