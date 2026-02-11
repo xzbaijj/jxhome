@@ -1,18 +1,15 @@
 from homeassistant import config_entries
-import voluptuous as vol
 from .const import DOMAIN
 
 class JXHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """处理杰效的 UI 配置流程"""
+    """处理‘杰效’集成的配置流程"""
     VERSION = 1
 
     async def async_step_user(self, user_input=None):
+        """用户点击‘添加集成’时调用的第一步"""
         if user_input is not None:
-            return self.async_create_entry(title=user_input["name"], data=user_input)
+            # 创建集成条目
+            return self.async_create_entry(title="杰效设备", data={})
 
-        return self.async_show_form(
-            step_id="user",
-            data_schema=vol.Schema({
-                vol.Required("name", default="杰效智能设备"): str,
-            })
-        )
+        # 显示一个确认添加的表单
+        return self.async_show_form(step_id="user")
