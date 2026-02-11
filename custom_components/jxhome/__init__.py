@@ -2,7 +2,6 @@ from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers import device_registry as dr
 from .const import DOMAIN, PLATFORMS
-from .services import async_setup_services, async_unload_services
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """设置集成条目"""
@@ -10,27 +9,16 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     entry.async_on_unload(entry.add_update_listener(update_listener))
     
     hass.data.setdefault(DOMAIN, {})
-    hass.data[DOMAIN][entry.entry_id] = {
-        "entry": entry,
-        "hass": hass,
-    }
-    
-    # 注册服务（仅在首次设置时）
-    if not hass.data[DOMAIN].get("services_registered"):
-        await async_setup_services(hass)
-        hass.data[DOMAIN]["services_registered"] = True
+    hass.data[DOMAIN][entry.entry_id] = entry
     
     # 注册设备
     device_registry = dr.async_get(hass)
-    device = device_registry.async_get_or_create(
+    device_registry.async_get_or_create(
         config_entry_id=entry.entry_id,
         identifiers={(DOMAIN, entry.entry_id)},
         name=entry.data.get("name", "杰效主控板"),
         manufacturer="杰效科技",
     )
-    
-    # 存储 device_id 以便在 device config flow 中使用
-    hass.data[DOMAIN][entry.entry_id]["device_id"] = device.id
     
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True
@@ -44,9 +32,6 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     if entry.entry_id in hass.data.get(DOMAIN, {}):
         del hass.data[DOMAIN][entry.entry_id]
     
-    # 清理服务
-    if hass.data[DOMAIN].get("services_registered"):
-        await async_unload_services(hass)
-        hass.data[DOMAIN]["services_registered"] = False
+    return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
     
     return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
