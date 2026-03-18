@@ -5,6 +5,9 @@
         "title": "添加 杰效 设备",
         "data": { "name": "设备名称" }
       }
+    },
+    "abort": {
+      "mqtt_not_configured": "未检测到 MQTT（Mosquitto）集成，请先在 Home Assistant 中配置 MQTT 集成（CentOS 系统请确保已安装并启动 Mosquitto 服务）。"
     }
   },
   "options": {

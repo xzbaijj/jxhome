@@ -44,10 +44,3 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         del hass.data[DOMAIN][entry.entry_id]
     
     return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
-
-async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    """卸载集成条目"""
-    if entry.entry_id in hass.data.get(DOMAIN, {}):
-        del hass.data[DOMAIN][entry.entry_id]
-    
-    return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
