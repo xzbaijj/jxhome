@@ -75,8 +75,10 @@ class JXHomeDeviceInfoSensor(SensorEntity):
         """移除实体时清理"""
         self._unsub_options()
 
+
+class JXHomeSensor(SensorEntity):
     """杰效状态传感器"""
-    
+
     def __init__(self, entry):
         self._attr_name = f"{entry.data.get('name')} 状态"
         self._attr_unique_id = f"{entry.entry_id}_status"
@@ -94,6 +96,7 @@ class JXHomeDeviceInfoSensor(SensorEntity):
             "name": self._config_entry.data.get("name", "杰效主控板"),
             "manufacturer": "杰效科技",
         }
+
 
 class JXHomeVoltageSensor(SensorEntity):
     """杰效电压传感器"""
