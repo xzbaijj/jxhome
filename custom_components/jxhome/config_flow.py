@@ -1,4 +1,5 @@
 ﻿from homeassistant import config_entries
+from homeassistant.components.mqtt import DOMAIN as MQTT_DOMAIN
 from homeassistant.core import callback, HomeAssistant
 from homeassistant.data_entry_flow import FlowResult
 import voluptuous as vol
@@ -9,6 +10,10 @@ class JXHomeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     VERSION = 1
 
     async def async_step_user(self, user_input=None):
+        # 检查 MQTT（Mosquitto）集成是否已安装并配置
+        if not self.hass.config_entries.async_entries(MQTT_DOMAIN):
+            return self.async_abort(reason="mqtt_not_configured")
+
         if user_input is not None:
             return self.async_create_entry(title=user_input["name"], data=user_input)
 
